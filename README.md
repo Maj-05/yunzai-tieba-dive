@@ -1,9 +1,8 @@
 # yunzai-tieba-dive
 
 > 云崽（TRSS-Yunzai / Miao-Yunzai）贴吧插件：自动读帖、生成日报、每日签到；回帖可选，带频率与内容限制。
-> 移植自 [Nekomeow114/dsh-tieba-dive](https://github.com/Nekomeow114/dsh-tieba-dive)（DSH 插件版），**抓取与风控层原样保留，宿主层重写为云崽插件**。
 
-⚠️ 走的是贴吧手机版页面 + app protobuf（逆向解析），不是官方 API。贴吧改版可能失效，频繁请求可能触发风控；账号风险与发布内容由使用者自行承担。**建议用小号。**
+⚠️ 走的是贴吧手机版页面 + app protobuf（逆向解析），不是官方 API。贴吧改版可能失效，频繁请求可能触发风控；账号风险与发布内容由使用者自行承担。
 
 ---
 
@@ -50,25 +49,6 @@ plugins/yunzai-tieba-dive/data/tieba-duty/cookie.txt
 | `#贴吧熔断状态` / `#贴吧熔断清除` | 主人/所有人 | 风控熔断查看/清除 |
 | `#贴吧风格库清理 <吧名>` | 主人 | 清空某吧的风格库 |
 
-## 与 DSH 原版的差异
-
-| | dsh-tieba-dive（原版） | yunzai-tieba-dive（本仓库） |
-|---|---|---|
-| 宿主 | DeepSeek Harness 插件 | Yunzai plugin 类 + 命令规则 |
-| 一轮执行 | 模型 agent 按 prompts/duty.md 自主跑 | **确定性流程**（代码写死步骤），只把「总结/写回帖」交给 LLM |
-| 无 LLM 时 | 跑不起来 | **照常采集/签到**，日报退化为帖子列表 |
-| 回帖生成 | 模型调用工具链 | `lib/llm.mjs` 单轮对话 + toneGate 拦截 |
-| 设置页 | DSH Web 设置页 | QQ 命令（`#贴吧设置`） |
-| 定时 | DSH headless 子进程 | 云崽 task（`config/config/` 下加 task）或 `#贴吧刷一轮` |
-| 楼中楼回复 / 发新帖 / 发图 | 支持 | **未移植**（第一期先不做，需要再加） |
-| 风控熔断 / curl 反爬 / protobuf 通道 | ✅ | ✅ 原样保留 |
-
-## 从原版保留的东西（几乎零改动）
-
-- `lib/tieba.js` — curl 子进程网络层（百度认 TLS 指纹，Node fetch 会 `is_login:0`）、手机版 `/mo/q/m` 解析、app protobuf 签名/回帖/关注/热门接口、图床上传
-- `lib/cooldown.mjs` — 撞到「百度安全验证」落盘熔断
-- 仅改了一处：数据目录从 `$DSH_HOME/tieba-duty` 改为插件内 `data/tieba-duty`（可用环境变量 `YUNZAI_TIEBA_HOME` 覆盖）
-
 ## 数据目录
 
 ```
@@ -113,16 +93,6 @@ yunzai-tieba-dive:
 - 四道闸：总开关 → 每日上限 → 同帖一天一次 → 最小间隔
 - BDUSS 只存本地 cookie.txt（600），无任何命令能读出它
 - **回帖默认关**；开了也建议小号，被封不心疼
-
-## 未移植（原版有、这版没有）
-
-- 楼中楼回复（`allowSubReply` 那套）
-- 发新帖 / 带图回帖 / 图床上传
-- 人设版本快照 / 漂移评分 / 日记
-- MCP server
-- Web 设置页（云崽用命令代替）
-
-需要的话按原版 `lib/tieba.js` 的接口（`replySub` / `createThread` / `replyWithImage`）往 `runner.mjs` 里加，抓取层是现成的。
 
 ## 致谢与许可
 
