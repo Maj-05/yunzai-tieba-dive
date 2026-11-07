@@ -1,0 +1,23 @@
+{
+  "name": "yunzai-tieba-dive",
+  "version": "1.0.0",
+  "description": "Yunzai 插件 · 贴吧自动读帖/日报/签到，回帖可选（移植自 dsh-tieba-dive 的抓取与风控层）",
+  "keywords": [
+    "yunzai",
+    "trss-yunzai",
+    "miao-yunzai",
+    "tieba",
+    "baidu"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zabuxie/yunzai-tieba-dive.git"
+  },
+  "author": "ported from Nekomeow114/dsh-tieba-dive"
+}
